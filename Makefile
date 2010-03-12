@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-I./include -Wall -g
 AR=ar
 RM=rm -f
-LIBPACKET=libframe.a
+LIBFRAME=libframe.a
 OBJS=l3/arp.o l2/etherii.o common/manip.o common/pdu.o
 
 .c.o:
@@ -11,10 +11,10 @@ OBJS=l3/arp.o l2/etherii.o common/manip.o common/pdu.o
 libframe.a: $(OBJS)
 	$(AR) rcs $@ $(OBJS)
 
-inject: libframe.a inject.o
-	$(CC) $(CFLAGS) inject.c -o inject -L. -lframe -lpcap
+example: libframe.a example.o
+	$(CC) $(CFLAGS) example.c -o example -L. -lframe -lpcap
 
 clean:
 	$(RM) $(OBJS)
-	$(RM) $(LIBPACKET)
-	$(RM) inject.o inject
+	$(RM) $(LIBFRAME)
+	$(RM) example.o example
