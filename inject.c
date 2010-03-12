@@ -1,15 +1,11 @@
 #include <pcap.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "etypes.h"
-#include "manip.h"
-#include "etherii.h"
-#include "arp.h"
+#include "frame.h"
 
 #define FRAME_SIZE 1500
 
-int main(int argc, char **argv) {
+int main() {
 
 	char errbuf[ PCAP_ERRBUF_SIZE ];
 	pcap_t *inject_int_desc;
