@@ -1,10 +1,20 @@
-#ifndef __COMMONH__
-#define __COMMONH__
+#ifndef __PDUH__
+#define __PDUH__
+
+#include "common.h"
 
 struct pdu {
-	char *data;
-	int length;
+	u8_t *data;
+	int size;
 };
 typedef struct pdu pdu_t;
+
+struct header {
+	void *data;
+	int size;
+};
+typedef struct header header_t;
+
+pdu_t *pdu_create( header_t *header, pdu_t *payload );
 
 #endif

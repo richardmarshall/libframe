@@ -3,7 +3,7 @@ CFLAGS=-I./include -Wall -g
 AR=ar
 RM=rm -f
 LIBPACKET=libframe.a
-OBJS=l3/arp/arp.o l2/etherii/etherii.o common/manip.o
+OBJS=l3/arp.o l2/etherii.o common/manip.o common/pdu.o
 
 .c.o:
 	$(CC) $(CFLAGS) -c -o $@ $<

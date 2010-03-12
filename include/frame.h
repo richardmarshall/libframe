@@ -5,5 +5,6 @@
 #include "etherii.h"
 #include "manip.h"
 #include "etypes.h"
+#include "common.h"
 
 #endif
