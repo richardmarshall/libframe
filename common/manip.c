@@ -9,6 +9,8 @@ int parse_mac_string(const char *mac, char *out) {
 		b = strtol(mac+(3*i), (char **) NULL, 16);
 		out[i] = (char)b;
 	}
+
+	return 1;
 }
 
 int parse_ip_string(const char *ip, char *out) {
@@ -24,4 +26,6 @@ int parse_ip_string(const char *ip, char *out) {
 		out[i] = (char)b;
 	}
 	free(cp);
+
+	return 1;
 }

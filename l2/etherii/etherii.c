@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int	set_etherii_header(char *dst, char *src, int etype, char *buf) {
+extern int	set_etherii_header(char *dst, char *src, int etype, char *buf) {
 	char mac_dst[6], mac_src[6];
 
 	if ( !parse_mac_string(dst, mac_dst) )

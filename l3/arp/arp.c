@@ -1,6 +1,7 @@
 #include <string.h>
 #include "arp.h"
 #include "etypes.h"
+#include "manip.h"
 
 int build_arp(arp_t *arp, int offset, char *frame) {
 	memcpy((void *)(frame+offset), (void *)arp, sizeof(arp_t));

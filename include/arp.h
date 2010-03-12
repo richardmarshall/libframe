@@ -7,7 +7,7 @@
 
 struct arp {
 	short htype;
-	short  ptype;
+	short ptype;
 	char hlen;
 	char plen;
 	short oper;
@@ -18,7 +18,7 @@ struct arp {
 } __attribute__((__packed__));
 typedef struct arp arp_t;
 
-int build_arp(arp_t *arp, int offset, char *frame);
-int set_arp(char *s_mac, char *s_ip, char *d_mac, char *d_ip, short oper, int offset, char *frame);
+extern int build_arp(arp_t *arp, int offset, char *frame);
+extern int set_arp(char *s_mac, char *s_ip, char *d_mac, char *d_ip, short oper, int offset, char *frame);
 
 #endif
