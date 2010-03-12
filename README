@@ -2,6 +2,8 @@ libpacket
 
 academic project to create a library for layer2/3/4 segment/packet/frame generation for use with libpcap's injection support.
 
+YES we know there are aleady tools to do this, however this library is mostly for learning.
+
 Authors:
 
 Richard Marshall <rgm@linux.com>

@@ -53,35 +53,79 @@ etherii_frame = pdu_create( header, arp_packet );
 
 PROTOCOL APIS:
 
+Common --
+
+typedef unsigned char  u8_t;
+typedef unsigned short u16_t;
+typedef unsigned int   u32_t;
+
+#define ETYPE_IP    0x0800
+#define ETYPE_ARP   0x0806
+#define ETYPE_DOT1Q 0x8100
+#define ETYPE_QINQ  0x9100
+
+802.3 --
+
+struct ether8023_header {
+	u8_t dst[6];
+	u8_t src[6];
+	u16_t length;
+}__attribute__((__packed__));
+typedef struct ether8023_header ether8023_header_t;
+
+header_t *ether8023_header_create( u8_t *dst, u8_t *src, u16_t length );
+header_t *ether8023_simple_header_create( u8_t *dst, u8_t *src, u16_t length );
+
+802.2LLC --
+
+struct ether8022llc_header {
+	u8_t dsap;
+	u8_t ssap;
+	u8_t cfield;
+	u8_t ocode[3];
+	u16_t pid;
+}__attribute__((__packed__));
+typedef struct ether8022llc_header ether8022llc_header_t;
+
+header_t *ether8022llc_header_create( u8_t dsap, u8_t ssap, u8_t cfield, u8_t *ocode, u16_t pid );
+
 EthernetII --
 
 struct etherii_header {
-	char dst[6];
-	char src[6];
-	short etype;
+	u8_t  dst[6];
+	u8_t  src[6];
+	u16_t etype;
 }__attribute__((__packed__));
 typedef struct etherii_header etherii_header_t;
 
-header_t *etherii_header_create( char *dst, char *src, short etype );
-header_t *etherii_simple_header_create( char *dst, char *src, short etype );
+header_t *etherii_header_create( u8_t *dst, u8_t *src, u16_t etype );
+header_t *etherii_simple_header_create( u8_t *dst, u8_t *src, u16_t etype );
 
 ARP --
 
+#define ARP_OPER_QUERY   1
+#define ARP_OPER_REPLY   2
+#define ARP_OPER_RQUERY  3
+#define ARP_OPER_RREPLY  4
+#define ARP_OPER_IQUERY  8
+#define ARP_OPER_IREPLY  9
+#define ARP_OPER_NAK     10
+
 /* Probably the only version of this we will create */
 struct arp_ip_ether_header {
-	short htype;
-	short  ptype;
-	char hlen;
-	char plen;
-	short oper;
-	char sha[6];
-	char spa[4];
-	char tha[6];
-	char tpa[4];
+	u16_t htype;
+	u16_t ptype;
+	u8_t  hlen;
+	u8_t  plen;
+	u16_t oper;
+	u8_t  sha[6];
+	u8_t  spa[4];
+	u8_t  tha[6];
+	u8_t  tpa[4];
 } __attribute__((__packed__));
 typedef struct arp_ip_ether_header arp_ip_ether_header_t;
 
-header_t *arp_header_create( short htype, short ptype, char hsize, char psize, short oper, char *sha, char *spa, char *tha, char *tpa );
-pdu_t *arp_create( short htype, short ptype, char hsize, char psize, short oper, char *sha, char *spa, char *tha, char *tpa );
-pdu_t *arp_ie_simple_create( short oper, char *sha, char *spa, char *sha, char *spa ); /* simple fn for IP/Ethernet arp the most common */
+header_t *arp_header_create( u16_t htype, u16_t ptype, u8_t hsize, u8_t psize, u16_t oper, u8_t *sha, u8_t *spa, u8_t *tha, u8_t *tpa );
+pdu_t *arp_create( u16_t htype, u16_t ptype, u8_t hsize, u8_t psize, u16_t oper, u8_t *sha, u8_t *spa, u8_t *tha, u8_t *tpa );
+pdu_t *arp_ie_simple_create( u16_t oper, u8_t *sha, u8_t *spa, u8_t *sha, u8_t *spa ); /* simple fn for IP/Ethernet arp the most common */
 
