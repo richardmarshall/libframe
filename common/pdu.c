@@ -3,9 +3,20 @@
 #include "common.h"
 #include "pdu.h"
 
+/* free pdu/header functions */
+extern void free_pdu(pdu_t **pdu) {
+	free((*pdu)->data);
+	free((*pdu));
+	*pdu = NULL;
+}
+
+
 /* generic function to create pdu structs */
 pdu_t *pdu_create( header_t *header, pdu_t *payload ) {
 	pdu_t *new_pdu = NULL;
+
+	if (header == NULL)
+		return NULL;
 
 	/* if malloc fails exit */
 	if ( !(new_pdu = malloc( sizeof( pdu_t ) ) ) )
