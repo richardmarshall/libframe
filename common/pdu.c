@@ -5,9 +5,12 @@
 
 /* free pdu/header functions */
 extern void free_pdu(pdu_t **pdu) {
-	free((*pdu)->data);
-	free((*pdu));
-	*pdu = NULL;
+	if (*pdu) {
+		if ((*pdu)->data)
+			free((*pdu)->data);
+		free((*pdu));
+		*pdu = NULL;
+	}
 }
 
 
