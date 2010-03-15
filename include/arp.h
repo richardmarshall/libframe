@@ -27,8 +27,12 @@ struct arp_ip_ether_header {
 }__attribute__((__packed__));
 typedef struct arp_ip_ether_header arp_ip_ether_header_t;
 
+
+/* function prototypes */
 extern header_t *arp_header_create( uint16_t htype, uint16_t ptype, uint8_t hsize, uint8_t psize, uint16_t oper, uint8_t *sha, uint8_t *spa, uint8_t *tha, uint8_t *tpa );
+
 extern pdu_t *arp_create( uint16_t htype, uint16_t ptype, uint8_t hsize, uint8_t psize, uint16_t oper, uint8_t *sha, uint8_t *spa, uint8_t *tha, uint8_t *tpa );
+
 extern pdu_t *arp_ie_simple_create( uint16_t oper, char *sha, char *spa, char *tha, char *tpa ); /* simple fn for IP/Ethernet arp the most common */
 
 
