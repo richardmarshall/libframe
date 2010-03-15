@@ -6,6 +6,7 @@
 
 /* LLC SAPs */
 #define SAP_SNAP 0xAA
+#define SAP_BPDU 0x42
 
 /* LLC Control field flags */
 #define CFIELD_UNNUMBERED_INFO 0x00

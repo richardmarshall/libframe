@@ -7,6 +7,7 @@
 #include "ether8023.h"
 #include "ether8022llc.h"
 #include "ether8022snap.h"
+#include "stp.h"
 #include "manip.h"
 #include "etypes.h"
 #include "common.h"
