@@ -19,10 +19,12 @@ struct ether8022llc_header {
 }__attribute__((__packed__));
 typedef struct ether8022llc_header ether8022llc_header_t;
 
-header_t *ether8022llc_header_create( uint8_t dsap, uint8_t ssap, uint8_t cfield );
+header_t *ether8022llc_header_create(uint8_t dsap, uint8_t ssap, uint8_t cfield);
 
-static inline pdu_t *ether8022llc_quick_create( uint8_t dsap, uint8_t ssap, uint8_t cfield, pdu_t *payload ) {
-	return pdu_create(ether8022llc_header_create(dsap,ssap,cfield),payload);
+static inline pdu_t *ether8022llc_quick_create( uint8_t dsap, uint8_t ssap,
+						uint8_t cfield, pdu_t *payload )
+{
+	return pdu_create(ether8022llc_header_create(dsap, ssap, cfield), payload);
 }
 
 #endif
