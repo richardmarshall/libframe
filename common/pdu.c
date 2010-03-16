@@ -4,7 +4,8 @@
 #include "pdu.h"
 
 /* free pdu/header functions */
-extern void free_pdu(pdu_t **pdu) {
+extern void free_pdu(pdu_t **pdu)
+{
 	if (*pdu) {
 		if ((*pdu)->data)
 			free((*pdu)->data);
@@ -15,14 +16,15 @@ extern void free_pdu(pdu_t **pdu) {
 
 
 /* generic function to create pdu structs */
-pdu_t *pdu_create( header_t *header, pdu_t *payload ) {
+pdu_t *pdu_create( header_t *header, pdu_t *payload )
+{
 	pdu_t *new_pdu = NULL;
 
 	if (header == NULL)
 		return NULL;
 
 	/* if malloc fails exit */
-	if ( !(new_pdu = malloc( sizeof( pdu_t ) ) ) )
+	if (!(new_pdu = malloc(sizeof(pdu_t))))
 		return NULL;
 
 	/* first set new pdu size to the header size */
@@ -33,8 +35,8 @@ pdu_t *pdu_create( header_t *header, pdu_t *payload ) {
 		new_pdu->size += payload->size;
 
 	/* if malloc fails free pdu_t struct exit */
-	if( !(new_pdu->data = malloc( new_pdu->size ) ) ) {
-		free( new_pdu );
+	if(!(new_pdu->data = malloc(new_pdu->size))) {
+		free(new_pdu);
 		return NULL;
 	}
 
@@ -43,7 +45,8 @@ pdu_t *pdu_create( header_t *header, pdu_t *payload ) {
 
 	/* if there is a payload also copy in that data */
 	if (new_pdu->size > header->size)
-		memcpy((void *)(new_pdu->data+header->size), (void *)payload->data, payload->size);
+		memcpy((void *)(new_pdu->data+header->size),
+		       (void *)payload->data, payload->size);
 
 	/* return pointer to new pdu */
 	return new_pdu;
