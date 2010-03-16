@@ -29,7 +29,7 @@ extern header_t *stp_rstp_header_create( uint8_t flags, uint16_t root_pri, uint8
 	bpdu->pid = STP_PID_STP;
 	bpdu->version = STP_VER_RSTP;
 	bpdu->type = STP_BPDU_RSTP;
-	bpdu->flags = flags;
+	bpdu->flags = (stp_bpdu_flags_t)flags;
 	bpdu->root_pri = htons(root_pri);
 	memcpy((void *)bpdu->root_id, (void *)root_id, 6);
 	bpdu->root_cost = root_cost;
