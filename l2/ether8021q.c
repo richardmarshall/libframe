@@ -25,11 +25,6 @@ header_t *dot1q_header_create(uint16_t pcp, uint16_t cfi, uint16_t vid,
         dot1q_h = header->data;
 
         /* copy data into new header */
-        /*
-	dot1q_h->pcp = pcp;
-        dot1q_h->cfi = cfi;
-        dot1q_h->vid = vid;
-	*/
 	/*
 	 * unfortunantly the bit field idea will not work as the pcp,cfi and a 
 	 * portion of the vid fields need to be in the high order bits of the 
