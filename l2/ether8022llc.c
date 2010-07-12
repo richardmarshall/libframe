@@ -6,7 +6,7 @@
 #include "ether8022llc.h"
 
 /* create a new 802.2LLC header */
-int ether8022llc_create(struct frame *framep, uint8_t dsap, uint8_t ssap, uint8_t cfield)
+struct pdu *ether8022llc_create(struct frame *framep, uint8_t dsap, uint8_t ssap, uint8_t cfield)
 {
 	struct pdu *pdu = NULL;
 	ether8022llc_header_t *llc_header = NULL;
@@ -18,7 +18,6 @@ int ether8022llc_create(struct frame *framep, uint8_t dsap, uint8_t ssap, uint8_
 		llc_header->dsap = dsap;
 		llc_header->ssap = ssap;
 		llc_header->cfield = cfield;
-		return true;
 	}
-	return false;
+	return pdu;
 }

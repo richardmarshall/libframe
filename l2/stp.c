@@ -7,7 +7,7 @@
 #include "manip.h"
 #include "common.h"
 
-int stp_rstp_create(struct frame *framep,
+struct pdu *stp_rstp_create(struct frame *framep,
 			uint8_t flags, uint16_t root_pri, 
 			uint8_t *root_id, uint8_t root_cost, 
 			uint16_t bridge_pri, uint8_t *bridge_id,
@@ -36,13 +36,11 @@ int stp_rstp_create(struct frame *framep,
 		bpdu->hello_time = htons(hello_time);
 		bpdu->forward_delay = htons(forward_delay);
 		bpdu->length = len;
-
-		return true;
 	}
-	return false;
+	return pdu;
 }
 
-int stp_rstp_simple_create(struct frame *framep, uint8_t flags, uint16_t root_pri,
+struct pdu *stp_rstp_simple_create(struct frame *framep, uint8_t flags, uint16_t root_pri,
 				     char *root_id, uint8_t root_cost,
 				     uint16_t bridge_pri, char *bridge_id,
 				     uint16_t port_id, uint16_t age,
@@ -52,9 +50,9 @@ int stp_rstp_simple_create(struct frame *framep, uint8_t flags, uint16_t root_pr
 	uint8_t broot_id[6], bbridge_id[6];
 
 	if (!parse_mac_string(root_id,broot_id)) 
-		return false;
+		return NULL;
 	if (!parse_mac_string(bridge_id,bbridge_id)) 
-		return false;
+		return NULL;
 
 	return stp_rstp_create(framep, flags, root_pri, broot_id, root_cost, bridge_pri,
 			       bbridge_id, port_id, age, max_age, hello_time, 

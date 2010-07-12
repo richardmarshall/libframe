@@ -6,7 +6,7 @@
 #include "manip.h"
 #include "pdu.h"
 
-int etherii_create(struct frame *framep, uint8_t *dst, uint8_t *src, uint16_t etype)
+struct pdu *etherii_create(struct frame *framep, uint8_t *dst, uint8_t *src, uint16_t etype)
 {
 	struct pdu *pdu = NULL;
 	etherii_header_t *ether_header = NULL;
@@ -15,20 +15,19 @@ int etherii_create(struct frame *framep, uint8_t *dst, uint8_t *src, uint16_t et
 		memcpy((void *)ether_header->dst, (void *)dst, 6);
 		memcpy((void *)ether_header->src, (void *)src, 6);
 		ether_header->etype = htons(etype);
-		return true;
 	} 
-	return false;
+	return pdu;
 }
 
-int etherii_simple_create(struct frame *framep, char *dst, char *src, uint16_t etype)
+struct pdu *etherii_simple_create(struct frame *framep, char *dst, char *src, uint16_t etype)
 {
 	uint8_t bdst[6], bsrc[6];
 
 	/* convery MAC string to internal representation */
 	if (!parse_mac_string(dst, bdst))
-		return false;
+		return NULL;
 	if (!parse_mac_string(src, bsrc))
-		return false;
+		return NULL;
 
 	return etherii_create(framep, bdst, bsrc, etype);	
 }

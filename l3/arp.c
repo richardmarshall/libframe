@@ -8,7 +8,7 @@
 #include "manip.h"
 
 /* create new arp header */
-int arp_create(struct frame *framep, uint16_t htype, uint16_t ptype, uint8_t hsize,
+struct pdu *arp_create(struct frame *framep, uint16_t htype, uint16_t ptype, uint8_t hsize,
 			    uint8_t psize, uint16_t oper, uint8_t *sha, 
 			    uint8_t *spa, uint8_t *tha, uint8_t *tpa)
 {
@@ -27,13 +27,12 @@ int arp_create(struct frame *framep, uint16_t htype, uint16_t ptype, uint8_t hsi
 		memcpy((void *)arp_header->spa, (void *)spa, 4);
 		memcpy((void *)arp_header->tha, (void *)tha, 6);
 		memcpy((void *)arp_header->tpa, (void *)tpa, 4);
-		return true;
 	}
-	return false;
+	return pdu;
 }
 
 /* simple fn for IP/Ethernet arp the most common */
-int arp_ie_simple_create(struct frame *framep, uint16_t oper, char *sha, char *spa, char *tha,
+struct pdu *arp_ie_simple_create(struct frame *framep, uint16_t oper, char *sha, char *spa, char *tha,
 			    char *tpa)
 {
 	uint8_t bsha[6], btha[6];
@@ -41,13 +40,13 @@ int arp_ie_simple_create(struct frame *framep, uint16_t oper, char *sha, char *s
 
 	/* convert strings */
 	if (!parse_mac_string(sha, bsha)) 
-		return false;
+		return NULL;
 	if (!parse_mac_string(tha, btha))
-		return false;
+		return NULL;
 	if (!parse_ip_string(spa, bspa))
-		return false;
+		return NULL;
 	if (!parse_ip_string(tpa, btpa))
-		return false;
+		return NULL;
 
 	/* return results of arp_create */
 	return arp_create(framep, ARP_HTYPE_ETHERNET, ETYPE_IP, 6, 4, oper, bsha, bspa,

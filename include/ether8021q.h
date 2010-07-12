@@ -12,7 +12,7 @@ struct dot1q_header
 }__attribute__((__packed__));
 typedef struct dot1q_header dot1q_header_t;
 
-int dot1q_create(struct frame *framep, uint16_t pcp, uint16_t cfi, uint16_t vid,
+struct pdu *dot1q_create(struct frame *framep, uint16_t pcp, uint16_t cfi, uint16_t vid,
 			      uint16_t etype);
 
 #define PCP_CFI_VID(p,c,v) (p<<13 | c<<12 | v)

@@ -21,13 +21,13 @@ ether_frame = pdu_create( ether_header, layer3 );
 */
 
 /* inline function to wrap etherii function with 8023 name */
-inline int ether8023_create(struct frame *framep, uint8_t *dst, uint8_t *src)
+inline struct pdu *ether8023_create(struct frame *framep, uint8_t *dst, uint8_t *src)
 {
 	return etherii_create(framep, dst, src, framep->size);
 }
 
 /* inline function to wrap etherii function with 8023 name */
-inline int ether8023_simple_create(struct frame *framep, char *dst, char *src)
+inline struct pdu *ether8023_simple_create(struct frame *framep, char *dst, char *src)
 {
 	return etherii_simple_create(framep, dst, src, framep->size);
 }

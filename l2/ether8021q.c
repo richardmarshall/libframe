@@ -5,7 +5,7 @@
 #include "ether8021q.h"
 
 /* Create 802.1q header */
-int dot1q_create(struct frame *framep, uint16_t pcp, uint16_t cfi, uint16_t vid,
+struct pdu *dot1q_create(struct frame *framep, uint16_t pcp, uint16_t cfi, uint16_t vid,
 			      uint16_t etype)
 {
 	struct pdu *pdu = NULL;
@@ -24,8 +24,7 @@ int dot1q_create(struct frame *framep, uint16_t pcp, uint16_t cfi, uint16_t vid,
 		dot1q_h->pcp_cfi_vid = PCP_CFI_VID(pcp, cfi, vid);
 		dot1q_h->pcp_cfi_vid = htons(dot1q_h->pcp_cfi_vid);
 		dot1q_h->etype = htons(etype);
-		return true;
 	}
-        return false;
+	return pdu;
 }
 

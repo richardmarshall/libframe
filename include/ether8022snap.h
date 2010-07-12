@@ -17,6 +17,6 @@ struct ether8022snap_header {
 }__attribute__((__packed__));
 typedef struct ether8022snap_header ether8022snap_header_t;
 
-int ether8022snap_create(struct frame *framep, uint32_t ocode, uint16_t pid);
+struct pdu *ether8022snap_create(struct frame *framep, uint32_t ocode, uint16_t pid);
 
 #endif

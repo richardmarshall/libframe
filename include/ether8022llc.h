@@ -20,6 +20,6 @@ struct ether8022llc_header {
 }__attribute__((__packed__));
 typedef struct ether8022llc_header ether8022llc_header_t;
 
-int ether8022llc_create(struct frame *framep, uint8_t dsap, uint8_t ssap, uint8_t cfield);
+struct pdu *ether8022llc_create(struct frame *framep, uint8_t dsap, uint8_t ssap, uint8_t cfield);
 
 #endif

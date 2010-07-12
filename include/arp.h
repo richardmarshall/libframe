@@ -29,13 +29,13 @@ struct arp_ip_ether_header {
 typedef struct arp_ip_ether_header arp_ip_ether_header_t;
 
 /* function prototypes */
-int arp_create(struct frame *framep, uint16_t htype, uint16_t ptype,
+struct pdu *arp_create(struct frame *framep, uint16_t htype, uint16_t ptype,
 				   uint8_t hsize, uint8_t psize, uint16_t oper,
 				   uint8_t *sha, uint8_t *spa, uint8_t *tha,
 				   uint8_t *tpa);
 
 /* simple fn for IP/Ethernet arp the most common */
-int arp_ie_simple_create(struct frame *framep, uint16_t oper, char *sha, char *spa,
+struct pdu *arp_ie_simple_create(struct frame *framep, uint16_t oper, char *sha, char *spa,
 				   char *tha, char *tpa); 
 
 
