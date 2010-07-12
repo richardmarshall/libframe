@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "pdu.h"
 #include "etherii.h"
+#include <protos.h>
 
 /*
 
@@ -20,17 +21,15 @@ ether_frame = pdu_create( ether_header, layer3 );
 */
 
 /* inline function to wrap etherii function with 8023 name */
-inline header_t *ether8023_header_create(uint8_t *dst, uint8_t *src,
-					 uint16_t len)
+inline int ether8023_create(struct frame *framep, uint8_t *dst, uint8_t *src)
 {
-	return etherii_header_create(dst, src, len);
+	return etherii_create(framep, dst, src, framep->size);
 }
 
 /* inline function to wrap etherii function with 8023 name */
-inline header_t *ether8023_simple_header_create(char *dst, char *src,
-						uint16_t len)
+inline int ether8023_simple_create(struct frame *framep, char *dst, char *src)
 {
-	return etherii_simple_header_create(dst, src, len);
+	return etherii_simple_create(framep, dst, src, framep->size);
 }
 
 #endif

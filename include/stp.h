@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <pdu.h>
+#include <protos.h>
 
 /* STP Protocol Identifiers */
 #define STP_PID_STP 0
@@ -53,21 +54,14 @@ struct stp_bpdu_header {
 }__attribute__((__packed__));
 typedef struct stp_bpdu_header stp_bpdu_header_t;
 
-extern header_t *stp_rstp_header_create(uint8_t flags, uint16_t root_pri,
+extern int stp_rstp_header_create(struct frame *framep, uint8_t flags, uint16_t root_pri,
 					uint8_t *root_id, uint8_t root_cost,
 					uint16_t bridge_pri, uint8_t *bridge_id,
 					uint16_t port_id, uint16_t age,
 					uint16_t max_age, uint16_t hello_time,
 					uint16_t forward_delay, uint8_t len);
 
-extern pdu_t *stp_rstp_create(uint8_t flags, uint16_t root_pri,
-			      uint8_t *root_id, uint8_t root_cost,
-			      uint16_t bridge_pri, uint8_t *bridge_id,
-			      uint16_t port_id, uint16_t age, uint16_t max_age,
-			      uint16_t hello_time, uint16_t forward_delay,
-			      uint8_t len);
-
-extern pdu_t *stp_rstp_simple_create(uint8_t flags, uint16_t root_pri,
+extern int stp_rstp_simple_create(struct frame *framep, uint8_t flags, uint16_t root_pri,
 				     char *root_id, uint8_t root_cost,
 				     uint16_t bridge_pri, char *bridge_id,
 				     uint16_t port_id, uint16_t age,

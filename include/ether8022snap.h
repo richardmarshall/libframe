@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "pdu.h"
+#include <protos.h>
 
 /* SNAP Ogranization Codes */
 #define SNAP_OCODE_CISCO 0x00000c
@@ -16,12 +17,6 @@ struct ether8022snap_header {
 }__attribute__((__packed__));
 typedef struct ether8022snap_header ether8022snap_header_t;
 
-header_t *ether8022snap_header_create(uint32_t ocode, uint16_t pid);
-
-static inline pdu_t *ether8022snap_quick_create(uint32_t ocode, uint16_t pid, 
-						pdu_t *payload) 
-{
-	return pdu_create(ether8022snap_header_create(ocode, pid), payload);
-}
+int ether8022snap_create(struct frame *framep, uint32_t ocode, uint16_t pid);
 
 #endif

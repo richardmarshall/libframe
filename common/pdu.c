@@ -1,53 +1,76 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "common.h"
 #include "pdu.h"
 
-/* free pdu/header functions */
-extern void free_pdu(pdu_t **pdu)
+extern void free_frame(struct frame **framep)
 {
-	if (*pdu) {
-		if ((*pdu)->data)
-			free((*pdu)->data);
-		free((*pdu));
-		*pdu = NULL;
+	struct pdu *pdup = NULL;
+	struct pdu *tmp = NULL;
+	struct frame *frame = NULL;
+
+	if (*framep) {
+		frame = *framep;
+		if (frame->pdus) {
+			pdup = frame->pdus; 
+			while (pdup) {
+				if (pdup->data != NULL)
+					pdup->data = NULL;
+				tmp = pdup;
+				pdup = tmp->next;
+				free(tmp);
+				tmp = NULL;
+			}
+		}
+		if (frame->data) {
+			frame->payload = NULL;
+			free(frame->data);
+			frame->data = NULL;
+		}
+		free(frame);
+		*framep = NULL;
 	}
 }
 
-
-/* generic function to create pdu structs */
-pdu_t *pdu_create( header_t *header, pdu_t *payload )
+struct frame *create_frame(size_t size)
 {
-	pdu_t *new_pdu = NULL;
-
-	if (header == NULL)
-		return NULL;
-
-	/* if malloc fails exit */
-	if (!(new_pdu = malloc(sizeof(pdu_t))))
-		return NULL;
-
-	/* first set new pdu size to the header size */
-	new_pdu->size = header->size;
-
-	/* change new pdu size depending on existance of payload */
-	if ( payload != NULL )
-		new_pdu->size += payload->size;
-
-	/* if malloc fails free pdu_t struct exit */
-	if(!(new_pdu->data = malloc(new_pdu->size))) {
-		free(new_pdu);
-		return NULL;
+	struct frame *frame = NULL;
+	
+	if ((frame = malloc(sizeof(struct frame)))) {
+		if((frame->data = malloc(size))) {
+			frame->tsize = size;
+			frame->size = 0;
+			frame->pdus = NULL;
+			frame->payload = (frame->data + size) - 1;
+		} else {
+			free(frame);
+			frame = NULL;
+		}
 	}
-
-	/* copy header into pdu */
-	memcpy((void *)new_pdu->data, (void *)header->data, header->size);
-
-	/* if there is a payload also copy in that data */
-	if (new_pdu->size > header->size)
-		memcpy((void *)(new_pdu->data+header->size),
-		       (void *)payload->data, payload->size);
-
-	/* return pointer to new pdu */
-	return new_pdu;
+	return frame;
 }
+
+struct pdu *create_pdu(struct frame *framep, size_t size, short type)
+{
+	struct pdu *new = NULL;
+	struct pdu *head = NULL;
+
+	head = framep->pdus;
+	if ((new = malloc(sizeof(struct pdu)))) {
+		new->type = type;
+		new->size = size;
+		new->next = head;
+		new->data = framep->payload - size;
+		if (new->data < framep->data) {
+			free(new);
+			new = NULL;
+		} else {
+			framep->pdus = new;
+			framep->size += size;
+			framep->payload = new->data;
+		}
+	}
+	return new;
+}
+

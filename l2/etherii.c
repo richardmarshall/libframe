@@ -4,44 +4,31 @@
 #include "common.h"
 #include "etherii.h"
 #include "manip.h"
+#include "pdu.h"
 
-/* create a new etherii header */
-header_t *etherii_header_create(uint8_t *dst, uint8_t *src, uint16_t etype) {
-	header_t *header = NULL;
+int etherii_create(struct frame *framep, uint8_t *dst, uint8_t *src, uint16_t etype)
+{
+	struct pdu *pdu = NULL;
 	etherii_header_t *ether_header = NULL;
-
-	/* return NULL if malloc fails */
-	if (!(header = malloc(sizeof(header_t))))
-		return NULL;
-
-	/* free header and return NULL if malloc fails */
-	if (!(header->data = malloc(sizeof(etherii_header_t)))) {
-		free(header);
-		return NULL;
-	}
-
-	/* set size in generic header struct */
-	header->size = sizeof(etherii_header_t);
-	ether_header = header->data;
-
-	/* copy data into new header */
-	memcpy((void *)ether_header->dst, (void *)dst, 6);
-	memcpy((void *)ether_header->src, (void *)src, 6);
-	ether_header->etype = htons(etype);
-
-	/* return pointer to new header */
-	return header;
+	if ((pdu = create_pdu(framep, sizeof(etherii_header_t), PROTO_ETHERII))) {
+		ether_header = pdu->data;
+		memcpy((void *)ether_header->dst, (void *)dst, 6);
+		memcpy((void *)ether_header->src, (void *)src, 6);
+		ether_header->etype = htons(etype);
+		return true;
+	} 
+	return false;
 }
 
-/* simple create header takes string arguments for src/dst macs */
-header_t *etherii_simple_header_create(char *dst, char *src, uint16_t etype) {
+int etherii_simple_create(struct frame *framep, char *dst, char *src, uint16_t etype)
+{
 	uint8_t bdst[6], bsrc[6];
 
 	/* convery MAC string to internal representation */
 	if (!parse_mac_string(dst, bdst))
-		return NULL;
+		return false;
 	if (!parse_mac_string(src, bsrc))
-		return NULL;
+		return false;
 
-	return etherii_header_create(bdst, bsrc, etype);	
+	return etherii_create(framep, bdst, bsrc, etype);	
 }

@@ -1,0 +1,16 @@
+#ifndef _PROTO_H_
+#define _PROTO_H_
+
+/* Layer 2 */
+#define PROTO_ETHERII 2001
+#define PROTO_ETHER8023 2002
+#define PROTO_ETHER8022SNAP 2003
+#define PROTO_ETHER8022LLC 2004
+#define PROTO_ETHER8021Q 2005
+#define PROTO_STP_RSTP 2006
+
+/* Layer 3 */
+#define PROTO_ARP 3001 
+#define PROTO_IP4 3002
+
+#endif

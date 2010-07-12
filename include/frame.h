@@ -11,6 +11,7 @@
 #include "manip.h"
 #include "etypes.h"
 #include "common.h"
+#include "protos.h"
 #include "ether8021q.h"
 
 #endif
