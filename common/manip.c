@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include "manip.h"
 
+/*
+ * Convert string representation of a mac address into an array of 6 bytes
+ * NOTE: This function does nothing to make sure the input is a valid MAC
+ * address.
+ */
 int parse_mac_string(const char *mac, uint8_t *out)
 {
 	long b;
@@ -14,6 +19,11 @@ int parse_mac_string(const char *mac, uint8_t *out)
 	return 1;
 }
 
+/*
+ * Convert string representation of an ip address into an array of 4 bytes
+ * FIXME: This code could write past the output buffer if string passed in has
+ * more than 3 '.' chars in it. Need to add additional bounding to the loop.
+ */
 int parse_ip_string(const char *ip, uint8_t *out)
 {
 	char *sep = ".";

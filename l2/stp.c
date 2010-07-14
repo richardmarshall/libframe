@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <arpa/inet.h>
-#include "pdu.h"
-#include "stp.h"
-#include "manip.h"
-#include "common.h"
+#include <pdu.h>
+#include <stp.h>
+#include <manip.h>
+#include <common.h>
 
 struct pdu *stp_rstp_create(struct frame *framep,
 			uint8_t flags, uint16_t root_pri, 
@@ -18,7 +18,8 @@ struct pdu *stp_rstp_create(struct frame *framep,
 	struct pdu *pdu = NULL;
 	stp_bpdu_header_t *bpdu = NULL;
 
-	if ((pdu = create_pdu(framep, sizeof(stp_bpdu_header_t), PROTO_STP_RSTP))) {
+	if ((pdu = create_pdu(framep, sizeof(stp_bpdu_header_t),
+							PROTO_STP_RSTP))) {
 		/* fill up the bpdu */
 		bpdu = pdu->data;
 		bpdu->pid = STP_PID_STP;
@@ -40,12 +41,13 @@ struct pdu *stp_rstp_create(struct frame *framep,
 	return pdu;
 }
 
-struct pdu *stp_rstp_simple_create(struct frame *framep, uint8_t flags, uint16_t root_pri,
-				     char *root_id, uint8_t root_cost,
-				     uint16_t bridge_pri, char *bridge_id,
-				     uint16_t port_id, uint16_t age,
-				     uint16_t max_age, uint16_t hello_time,
-				     uint16_t forward_delay, uint8_t len)
+struct pdu *stp_rstp_simple_create(struct frame *framep, uint8_t flags,
+					uint16_t root_pri, char *root_id, 
+					uint8_t root_cost, uint16_t bridge_pri,
+					char *bridge_id, uint16_t port_id,
+					uint16_t age, uint16_t max_age,
+					uint16_t hello_time,
+					uint16_t forward_delay, uint8_t len)
 {
 	uint8_t broot_id[6], bbridge_id[6];
 
@@ -54,7 +56,8 @@ struct pdu *stp_rstp_simple_create(struct frame *framep, uint8_t flags, uint16_t
 	if (!parse_mac_string(bridge_id,bbridge_id)) 
 		return NULL;
 
-	return stp_rstp_create(framep, flags, root_pri, broot_id, root_cost, bridge_pri,
-			       bbridge_id, port_id, age, max_age, hello_time, 
-			       forward_delay, len);
+	return stp_rstp_create(framep, flags, root_pri, broot_id, root_cost, 
+				bridge_pri, bbridge_id, port_id, age, max_age,
+				hello_time, forward_delay, len);
 }
+

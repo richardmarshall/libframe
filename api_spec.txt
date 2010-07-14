@@ -1,63 +1,71 @@
-﻿We need to spc out the interface for the library before moving on too much with development.
+﻿We need to spc out the interface for the library before moving on too much with
+development.
+
+Frame descriptor structure.
+struct frame {
+	size_t tsize;
+	size_t size;
+	struct pdu *pdus;
+	void *data;
+	void *payload;
+};
 
 Generic PDU struct for all layers
 struct pdu {
-	char *data;
-	int size;
+	void *data;
+	short type;
+	size_t size;
+	struct pdu *next;
 };
-typedef struct pdu pdu_t;
 
-Generic Header struct for all layers
-struct header {
-	void *header;
-	int size;
-};
-typedef struct header header_t;
+Generic Create PDU
+struct pdu *create_pdu(struct frame *framep, size_t size, short type);
 
-Generic Create PDU for all layers
-pdu_t *pdu_create( header_t *header, pdu_t *payload );
-
-Specific header_create functions for each protocol
-header_t *<PROTONAME>_header_create( <PROTOCOL DEPENDENT ARGUMENTS> );
+Specific pdu creation functions for each protocol
+struct pdu *<PROTOCOL>_create(struct frame *framep, <PROTOCOL DEPENDENT ARGUEMNTS>);
 
 Example for ethernetII:
-header_t *etherii_header_create( char *dst, char *src, short etype );
+header_t *etherii_create(struct frame *framep, char *dst, char *src, short etype);
 
-For protocols like arp that do not really have headers with a payload. Wrapper functions around the header/pdu creation would make things less confusing.
-pdu_t *<PROTONAME>_create( <PROTOCOL DEPENDENT ARGUMENTS> );
-
-Example for ARP:
-pdu_t *arp_create( short htype, short ptype, char hsize, char psize, short oper, char *sha, char *spa, char *tha, char *tpa );
-
-To simplify application development wrapper functions for each protocols header creation functions that perform input manipulation should be created.
-header_t *<PROTONAME>_simple_header_create( <PROTOCOL DEPENDENT ARGUEMNTS> );
+To simplify application development wrapper functions for each protocols header
+creation functions that perform input manipulation should be created.
+struct pdu *<PROTONAME>_simple_create(struct frame *framep, <PROTOCOL DEPENDENT ARGUEMNTS>);
 
 For example ethernetII:
-header_t *etherii_simple_header_create( char *dst, char *src, short etype );
-Where dst and src are mac addresses in string format ie: "00:00:00:00:00:00" to be converted. 
+struct pdu *etherii_simple_create(struct frame *framep, char *dst, char *src, short etype);
+Where dst and src are mac addresses in string format ie: "00:00:00:00:00:00" to
+be converted. 
 
 Complete usage example for ip arp on etherII:
 
-header_t *etherii_header = NULL;
-pdu_t *etherii_frame = NULL;
-pdu_t *arp_packet = NULL;
+struct frame *frame = NULL;
 
-/* Skipping definitionassignment of protocol specific arguments */
+/* 
+ * Skipping definition/assignment of protocol specific arguments 
+ * NOTE: This example is also ignoreing the return values of the functions
+ * which should be used to make sure each one returns a valid result and
+ * perform cleanup on failure.
+ */
 
-/* Create arp packet with NULL payload */
-apr_packet = arp_ie_simple_create( oper, sha, spa, tha, tpa );
+/* Create Frame */
+frame = create_frame(1500);
 
-/* Setup ethernetII frame with payload of arp packet */
-etherii_header = etherii_header_create( dst, src, etype );
-etherii_frame = pdu_create( header, arp_packet );
+/* Create arp packet */
+arp_ie_simple_create(frame, oper, sha, spa, tha, tpa);
 
+/* Setup ethernetII framing */
+etherii_create(frame, dst, src, etype);
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! THE FOLLOWING SPEC IS MISSING SEVERAL PROTOCOLS !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 PROTOCOL APIS:
 
 Common --
 
 typedef unsigned char  u8_t;
 typedef unsigned short u16_t;
-typedef unsigned int   u32_t;
+typedef unsiVgned int   u32_t;
 
 #define ETYPE_IP    0x0800
 #define ETYPE_ARP   0x0806
@@ -66,15 +74,9 @@ typedef unsigned int   u32_t;
 
 802.3 --
 
-struct ether8023_header {
-	u8_t dst[6];
-	u8_t src[6];
-	u16_t length;
-}__attribute__((__packed__));
-typedef struct ether8023_header ether8023_header_t;
-
-header_t *ether8023_header_create( u8_t *dst, u8_t *src, u16_t length );
-header_t *ether8023_simple_header_create( u8_t *dst, u8_t *src, u16_t length );
+/* 802.3 shares the same in frame structure as EtherII so see that spec for the layout */
+struct pdu *ether8023_create(struct frame *fp, u8_t *dst, u8_t *src, u16_t len);
+struct pdu *ether8023_simple_create(struct frame *fp, u8_t *dst, u8_t *src, u16_t len);
 
 802.2LLC --
 
@@ -87,7 +89,7 @@ struct ether8022llc_header {
 }__attribute__((__packed__));
 typedef struct ether8022llc_header ether8022llc_header_t;
 
-header_t *ether8022llc_header_create( u8_t dsap, u8_t ssap, u8_t cfield, u8_t *ocode, u16_t pid );
+struct pud *ether8022llc_create(struct frame *fp, u8_t dsap, u8_t ssap, u8_t cfield, u8_t *ocode, u16_t pid);
 
 EthernetII --
 
@@ -98,8 +100,8 @@ struct etherii_header {
 }__attribute__((__packed__));
 typedef struct etherii_header etherii_header_t;
 
-header_t *etherii_header_create( u8_t *dst, u8_t *src, u16_t etype );
-header_t *etherii_simple_header_create( u8_t *dst, u8_t *src, u16_t etype );
+struct pud *etherii_create(struct frame *fp, u8_t *dst, u8_t *src, u16_t etype);
+struct pdu *etherii_simple_create(struct frame *fp, u8_t *dst, u8_t *src, u16_t etype);
 
 ARP --
 
@@ -125,7 +127,8 @@ struct arp_ip_ether_header {
 } __attribute__((__packed__));
 typedef struct arp_ip_ether_header arp_ip_ether_header_t;
 
-header_t *arp_header_create( u16_t htype, u16_t ptype, u8_t hsize, u8_t psize, u16_t oper, u8_t *sha, u8_t *spa, u8_t *tha, u8_t *tpa );
-pdu_t *arp_create( u16_t htype, u16_t ptype, u8_t hsize, u8_t psize, u16_t oper, u8_t *sha, u8_t *spa, u8_t *tha, u8_t *tpa );
-pdu_t *arp_ie_simple_create( u16_t oper, u8_t *sha, u8_t *spa, u8_t *sha, u8_t *spa ); /* simple fn for IP/Ethernet arp the most common */
+struct pdu *arp_create(struct frame *fp, u16_t htype, u16_t ptype, u8_t hsize, u8_t psize,
+				u16_t oper, u8_t *sha, u8_t *spa, u8_t *tha, u8_t *tpa );
+struct pdu *arp_ie_simple_create(struct frame *fp, u16_t oper, u8_t *sha, u8_t *spa,
+		u8_t *sha, u8_t *spa ); /* simple fn for IP/Ethernet arp the most common */
 

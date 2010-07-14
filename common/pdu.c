@@ -1,9 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "common.h"
-#include "pdu.h"
+#include <common.h>
+#include <pdu.h>
 
+/*
+ * Walk down the pdus linked list and free each struct pdu. After cleaning
+ * up the pdus free the frame data and the frame struct.
+ */
 extern void free_frame(struct frame **framep)
 {
 	struct pdu *pdup = NULL;
@@ -33,6 +37,10 @@ extern void free_frame(struct frame **framep)
 	}
 }
 
+/*
+ * malloc a struct frame and enough space for the given frame size and setup 
+ * some initial values.
+ */
 struct frame *create_frame(size_t size)
 {
 	struct frame *frame = NULL;
@@ -51,6 +59,10 @@ struct frame *create_frame(size_t size)
 	return frame;
 }
 
+/*
+ * malloc a new struct pdu, setup some initial values and calculate offset into
+ * framep->data for the pdu's data.
+ */
 struct pdu *create_pdu(struct frame *framep, size_t size, short type)
 {
 	struct pdu *new = NULL;

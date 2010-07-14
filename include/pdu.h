@@ -1,11 +1,11 @@
 #ifndef __PDUH__
 #define __PDUH__
 
-#include <stdint.h>
+#include <stddef.h>
 
 struct frame {
-	int tsize;
-	int size; 
+	size_t tsize;
+	size_t size; 
 	struct pdu *pdus; 
 	void *data;
 	void *payload; 
@@ -14,7 +14,7 @@ struct frame {
 struct pdu {
 	void *data;
 	short type;
-	int size;
+	size_t size;
 	struct pdu *next;
 };
 
