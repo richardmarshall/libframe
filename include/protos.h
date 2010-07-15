@@ -11,6 +11,7 @@
 
 /* Layer 3 */
 #define PROTO_ARP 3001 
-#define PROTO_IP4 3002
+#define PROTO_IPV4 3002
+#define PROTO_ICMP 3003
 
 #endif
